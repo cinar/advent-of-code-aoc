@@ -9,6 +9,7 @@ This is my reporisotory for the [Advent of Code (AoC)](https://adventofcode.com/
 - [Day 2](2022/day2/main.py)
 - [Day 3](2022/day3/main.py)
 - [Day 4](2022/day4/main.py)
+- [Day 5](2022/day5/main.py)
 
 # AoC 2021
 - [Day 1](2021/day1/main.py)
