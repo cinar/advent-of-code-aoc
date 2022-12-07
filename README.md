@@ -17,3 +17,4 @@ This is my reporisotory for the [Advent of Code (AoC)](https://adventofcode.com/
 - [Day 2](2021/day2/main.py)
 - [Day 3](2021/day3/main.py)
 - [Day 4](2021/day4/main.py)
+- [Day 5](2021/day5/main.py)
