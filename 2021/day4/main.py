@@ -3,19 +3,27 @@
 #
 import re
 
-input_file = "sample.txt"
+#input_file = "sample.txt"
+input_file = "input.txt"
 
+#
+# Part 1 and 2
+#
 with open(input_file, "r") as file:
-  parts = file.read().split("\n\n")
-  drawns = [int(v) for v in parts[0].split(",")]
-  boards = [[int(v) for v in re.findall("\d+", p)] for p in parts[1:]]
+  pa = file.read().split("\n\n")
+  na = [int(v) for v in pa[0].split(",")]
+  ba = [[int(v) for v in re.findall("\d+", p)] for p in pa[1:]]
 
-  for drawn in drawns:
-    for board in boards:
-      if drawn in board:
-        i = board.index(drawn)
-        board[i] = None
-        print([1 if board[i] else 0 for i in range(i // 5, (i + 1) // 5)])
-
-  print(drawns)
-  print(boards[0])
+  ds = set()
+  l = 5
+  for n in na:
+    ds.add(n)
+    for b in ba:
+      if n in b:
+        r, c = divmod(b.index(n), l)
+        rm = sum([1 if b[r * l + i] in ds else 0 for i in range(l)]) == l
+        cm = sum([1 if b[i * l + c] in ds else 0 for i in range(l)]) == l
+        if rm or cm:
+          score = n * sum([v if v not in ds else 0 for v in b])
+          print(f"Number {n} score {score}.")
+          ba.remove(b)
