@@ -47,7 +47,7 @@ def calculate(rope):
                 delta = rope[i-1] - rope[i]
                 around = Point(min(1, max(-1, delta.x)),
                                min(1, max(-1, delta.y)))
-                if rope[i-1] - rope[i] != around:
+                if delta != around:
                     rope[i] += around
             visited.add(rope[-1])
 
