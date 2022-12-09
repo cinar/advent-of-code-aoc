@@ -1,86 +1,83 @@
 """ AoC 2022 Day 9 """
 from pathlib import Path
 
-INPUT_FILE = "sample.txt"
-#INPUT_FILE = "input.txt"
+#INPUT_FILE = "sample.txt"
+INPUT_FILE = "input.txt"
+
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return Point(self.x - other.x, self.y - other.y)
+
+    def __eq__(self, other):
+        if isinstance(other, Point):
+            return self.x == other.x and self.y == other.y
+        else:
+            return False
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
+    def __repr__(self):
+        return f"({self.x}, {self.y})"
+
+
+MOVE = {
+    "U": Point(0, 1),
+    "D": Point(0, -1),
+    "L": Point(-1, 0),
+    "R": Point(1, 0)
+}
+
+
+def calculate(rope):
+    visited = set()
+    for line in Path(INPUT_FILE).read_text(encoding="utf-8").splitlines():
+        direction, distance = line.split()
+        for _ in range(int(distance)):
+            rope[0] += MOVE[direction]
+            for i in range(1, len(rope)):
+                delta = rope[i-1] - rope[i]
+                around = Point(min(1, max(-1, delta.x)),
+                               min(1, max(-1, delta.y)))
+                if rope[i-1] - rope[i] != around:
+                    rope[i] += around
+            visited.add(rope[-1])
+
+    show(rope, visited)
+    print(len(visited))
+
+
+def show(rope, visited):
+    x = sorted(p.x for p in visited)
+    y = sorted(p.y for p in visited)
+
+    for i in range(y[-1], y[0] - 1, -1):
+        row = ""
+        for j in range(x[0], x[-1] + 1):
+            p = Point(j, i)
+            if p in rope:
+                row += str(rope.index(p))
+            elif p in visited:
+                row += "#"
+            else:
+                row += "."
+        print(row)
+
 
 #
 # Part 1
 #
-h = (0, 0)
-t = (0, 0)
-v = set(t)
-
-for line in Path(INPUT_FILE).read_text(encoding="utf-8").splitlines():
-    c, n = line.split()
-    n = int(n)
-
-    if c == "R":
-        h = (h[0] + n, h[1])
-        p = [(t[0] + x, h[1]) for x in range(1, abs(h[0] - t[0]))]
-    elif c == "U":
-        h = (h[0], h[1] + n)
-        p = [(h[0], t[1] + x) for x in range(1, abs(h[1] - t[1]))]
-    elif c == "L":
-        h = (h[0] - n, h[1])
-        p = [(t[0] - x, h[1]) for x in range(1, abs(h[0] - t[0]))]
-    elif c == "D":
-        h = (h[0], h[1] - n)
-        p = [(h[0], t[1] - x) for x in range(1, abs(h[1] - t[1]))]
-
-    if len(p) > 0:
-        t = p[-1]
-        v.update(p)
-
-    #print(f"{c} {n} - h{h} t{t}")
-    #print(f"{p}\n")
-
-print(len(v))
+calculate([Point(0, 0)] * 2)
 
 #
 # Part 2
 #
-INPUT_FILE = "sample2.txt"
-#INPUT_FILE = "input.txt"
-
-k = [(0, 0)] * 10
-v = set(k[-1])
-
-for line in Path(INPUT_FILE).read_text(encoding="utf-8").splitlines():
-    c, n = line.split()
-
-    print(k)
-    for i in range(int(n)):
-        h = k[0]
-
-        if c == "R":
-            h = (h[0] + 1, h[1])
-        elif c == "U":
-            h = (h[0], h[1] + 1)
-        elif c == "L":
-            h = (h[0] - 1, h[1])
-        elif c == "D":
-            h = (h[0], h[1] - 1)
-
-        k[0] = h
-
-        for j in range(len(k) - 1):
-            h = k[j]
-            t = k[j+1]
-
-            if abs(h[0] - t[0]) > 1 or abs(h[1] - t[1]) > 1:
-                if c == "R":
-                    t = (t[0] + 1, h[1])
-                elif c == "U":
-                    t = (h[0], t[1] + 1)
-                elif c == "L":
-                    t = (t[0] - 1, h[1])
-                elif c == "D":
-                    t = (h[0], t[1] - 1)
-
-                k[j+1] = t
-
-                if j == len(k) - 2:
-                    v.add(t)
-
-print(len(v))
+calculate([Point(0, 0)] * 10)
