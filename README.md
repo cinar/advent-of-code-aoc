@@ -26,3 +26,4 @@ This is my reporisotory for the [Advent of Code (AoC)](https://adventofcode.com/
 - [Day 7](2021/day7/main.py)
 - [Day 8](2021/day8/main.py)
 - [Day 9](2021/day9/main.py)
+- [Day 10](2021/day10/main.py)
