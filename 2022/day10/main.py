@@ -33,7 +33,6 @@ print(f"Total signals is {signals}.")
 # Part 2
 #
 cycles = 0
-row = ""
 x = 1
 for line in Path(INPUT_FILE).read_text(encoding="utf-8").splitlines():
     new_x = x
@@ -44,12 +43,13 @@ for line in Path(INPUT_FILE).read_text(encoding="utf-8").splitlines():
         need = 2
 
     for i in range(need):
-        cycles += 1
         column = cycles % 40
         if column == 0:
-            print(row)
-            row = ""
+            print()
 
-        row += "#" if column - 1 in [x-1, x, x+1] else " "
+        print("#" if column in [x-1, x, x+1] else " ", end="")
+        cycles += 1
 
     x = new_x
+
+print("")
