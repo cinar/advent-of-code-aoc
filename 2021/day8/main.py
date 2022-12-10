@@ -20,7 +20,7 @@ print(count)
 #
 total = 0
 for line in Path(INPUT_FILE).read_text(encoding="utf-8").splitlines():
-    patterns, outputs = (["".join(sorted(p)) for p in part.split(" ")]
+    patterns, outputs = ([frozenset(p) for p in part.split(" ")]
                          for part in line.split(" | "))
 
     ltp = defaultdict(list)
@@ -34,17 +34,17 @@ for line in Path(INPUT_FILE).read_text(encoding="utf-8").splitlines():
     ptn[ltp[7][0]] = 8
 
     for p in ltp[5]:
-        if not (set(ltp[2][0]) - set(p)):
+        if not (ltp[2][0] - p):
             ptn[p] = 3
-        elif not(set(ltp[4][0]) - set(ltp[2][0]) - set(p)):
+        elif not(ltp[4][0] - ltp[2][0] - p):
             ptn[p] = 5
         else:
             ptn[p] = 2
 
     for p in ltp[6]:
-        if (set(ltp[2][0]) - set(p)):
+        if (ltp[2][0] - p):
             ptn[p] = 6
-        elif not(set(ltp[4][0]) - set(p)):
+        elif not(ltp[4][0] - p):
             ptn[p] = 9
         else:
             ptn[p] = 0
