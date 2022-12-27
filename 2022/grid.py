@@ -47,6 +47,10 @@ class Grid:
         """Finds the index of given value."""
         return self._cells.index(value)
 
+    def find_index_of_all(self, value):
+        """Find all index of given value."""
+        return [i for i, v in enumerate(self._cells) if v == value]
+
     def index_to_pos(self, index):
         """Translate index to pos."""
         return divmod(index, self._cols)
