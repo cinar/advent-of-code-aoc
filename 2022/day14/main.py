@@ -1,15 +1,12 @@
 from collections import defaultdict
+from itertools import product
 from pathlib import Path
 
 DATA = Path("input.txt").read_text(encoding="utf-8").splitlines()
 SAND_START = (500, 0)
 
 
-def pairwise(l):
-    return zip(l, l[1:])
-
-
-def print_grid(grid, min_x, max_x, max_y):
+def print_grid(grid, max_y, min_x, max_x):
     print(
         "\n".join(
             "".join(grid[(x, y)] for x in range(min_x, max_x + 1))
@@ -20,32 +17,28 @@ def print_grid(grid, min_x, max_x, max_y):
 
 def make_grid():
     grid = defaultdict(lambda: ".")
+    max_y = 0
 
     for l in DATA:
-        for c1, c2 in pairwise(l.split(" -> ")):
+        c = l.split(" -> ")
+        for c1, c2 in zip(c, c[1:]):
             x1, y1 = map(int, c1.split(",")[:2])
             x2, y2 = map(int, c2.split(",")[:2])
-            if x1 == x2:
-                for y in range(min(y1, y2), max(y1, y2) + 1):
-                    grid[(x1, y)] = "#"
-            else:
-                for x in range(min(x1, x2), max(x1, x2) + 1):
-                    grid[(x, y1)] = "#"
+            x1, x2 = sorted((x1, x2))
+            y1, y2 = sorted((y1, y2))
+            max_y = max(max_y, y2)
+            for x, y in product(range(x1, x2 + 1), range(y1, y2 + 1)):
+                grid[(x, y)] = "#"
 
-    return (
-        grid,
-        min(x for x, _ in grid.keys()),
-        max(x for x, _ in grid.keys()),
-        max(y for _, y in grid.keys()),
-    )
+    return (grid, max_y)
 
 
 def p1():
-    grid, min_x, max_x, max_y = make_grid()
+    grid, max_y = make_grid()
     x, y = SAND_START
     units = 0
 
-    while min_x <= x <= max_x and y <= max_y:
+    while y <= max_y:
         if grid[(x, y + 1)] == ".":
             y += 1
         elif grid[(x - 1, y + 1)] == ".":
@@ -63,7 +56,7 @@ def p1():
 
 
 def p2():
-    grid, _, _, max_y = make_grid()
+    grid, max_y = make_grid()
     x, y = SAND_START
     units = 0
 
